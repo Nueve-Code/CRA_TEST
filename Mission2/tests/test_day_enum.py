@@ -1,7 +1,6 @@
 import pytest
 
-from Mission2.src.attendance import get_day_idx, get_point_of_the_day
-from Mission2.src.day import Day, day_properties
+from Mission2.src.day import Day, day_properties, parsing_days
 
 
 @pytest.mark.parametrize(
@@ -19,3 +18,19 @@ from Mission2.src.day import Day, day_properties
 def test_day_properties(day, day_id, point):
     assert day_properties[day]["point"] == point
     assert day_properties[day]["day_id"] == day_id
+
+@pytest.mark.parametrize(
+    "day, day_string",
+    (
+        (Day.MONDAY, 'monday'),
+        (Day.TUESDAY, 'tuesday'),
+        (Day.WEDNESDAY, 'wednesday'),
+        (Day.THURSDAY, 'thursday'),
+        (Day.FRIDAY, 'friday'),
+        (Day.SATURDAY, 'saturday'),
+        (Day.SUNDAY, 'sunday'),
+        (None, 'invalid'),
+    )
+)
+def test_parsing_days(day, day_string):
+    assert parsing_days(day_string) == day

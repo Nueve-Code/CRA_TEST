@@ -1,8 +1,6 @@
-from Mission2.src.day import day_properties, Day, parsingDays
-from Mission2.src.grade.gold import GoldGrade
-from Mission2.src.grade.normal import NormalGrade
-from Mission2.src.grade.silver import SilverGrade
+from Mission2.src.day import Day, get_day_idx, get_point_of_the_day, parsing_days
 from Mission2.src.member import Member
+from Mission2.src.policy.policy_grade_point import GradePointPolicy
 
 member_list: dict = {}
 total_members = 0
@@ -17,7 +15,7 @@ GRADE_SILVER = 2
 def init_member_data(member_name, day):
     global total_members
 
-    day = parsingDays(day)
+    day = parsing_days(day)
 
     if member_name not in member_list:
         total_members += 1
@@ -27,14 +25,6 @@ def init_member_data(member_name, day):
     member = member_list[member_name]
     member.check_attendance(get_day_idx(day))
     member.add_points(get_point_of_the_day(day))
-
-
-def get_day_idx(day):
-    return day_properties[day]["day_id"]
-
-
-def get_point_of_the_day(day):
-    return day_properties[day]["point"]
 
 
 def get_additional_points(member):
@@ -73,7 +63,7 @@ def set_grade_per_members():
     for member in member_list:
         member = member_list[member]
         member.add_points(get_additional_points(member))
-        set_grade(point=member.points, member=member)
+        set_grade(member=member)
 
         print(f"NAME : {member.name}, POINT : {member.points}, GRADE : ", end="")
         print(f"{member.grade.get_str()}")
@@ -84,20 +74,13 @@ def removing_members():
     print("==============")
     for member in member_list:
         member = member_list[member]
-        if (member.grade.get_grade_id() not in (GRADE_GOLD, GRADE_SILVER)
-                and member.attendance[get_day_idx(Day.WEDNESDAY)] == 0
-                and member.get_weekend_attendance() == 0):
+        if GradePointPolicy.remove_condition(member):
             print(member.name)
 
-def set_grade(point, member):
-    if point >= GOLD_GRADE_POINT:
-        grade = GoldGrade()
-    elif point >= SILVER_GRADE_POINT:
-        grade = SilverGrade()
-    else:
-        grade = NormalGrade()
 
-    member.grade = grade
+def set_grade(member):
+    member.grade = GradePointPolicy.get_grade_per_standard(member.points)
+
 
 if __name__ == "__main__":
     input_file()

@@ -10,8 +10,14 @@ class Day(Enum):
     SATURDAY = "saturday",
     SUNDAY = "sunday",
 
+def get_day_idx(day):
+    return day_properties[day]["day_id"]
 
-def parsingDays(day):
+
+def get_point_of_the_day(day):
+    return day_properties[day]["point"]
+
+def parsing_days(day):
     if day == 'monday':
         return Day.MONDAY
     elif day == 'tuesday':
