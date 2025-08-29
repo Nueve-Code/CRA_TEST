@@ -1,8 +1,6 @@
 from Mission2.src.grade.gold import GoldGrade
 from Mission2.src.grade.normal import NormalGrade
 from Mission2.src.grade.silver import SilverGrade
-from Mission1.attendance import get_day_idx
-from Mission2.src.day import Day, day_properties
 
 SILVER_GRADE_ID = 1
 GOLD_GRADE_ID = 2
