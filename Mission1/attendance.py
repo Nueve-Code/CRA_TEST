@@ -48,9 +48,7 @@ def get_day_idx(day: str):
 def check_special_day_attendance(day: str, member_id):
     if day == "wednesday":
         wednesday_attendance[member_id] += 1
-    elif day == "saturday":
-        weekend_attendance[member_id] += 1
-    elif day == "sunday":
+    elif day == "saturday" or day == "sunday":
         weekend_attendance[member_id] += 1
 
 
@@ -72,37 +70,50 @@ def get_additional_points(i):
     wednesday_attendance_count = attendance_data[i][get_day_idx('wednesday')]
     weekend_attendance_count = attendance_data[i][get_day_idx('saturday')] + attendance_data[i][get_day_idx('sunday')]
 
-    if (wednesday_attendance_count > 9) or (weekend_attendance_count > 9) :
+    if (wednesday_attendance_count > 9) or (weekend_attendance_count > 9):
         return 10
     else:
         return 0
 
+
 def input_file():
     try:
-        with open("attendance_weekday_500.txt", encoding='utf-8') as f:
-            for _ in range(500):
-                line = f.readline()
-                if not line:
-                    break
-                parts = line.strip().split()
-                if len(parts) == 2:
-                    init_members(parts[0], parts[1])
-
-        for member_id in range(1, total_members + 1):
-            points[member_id] += get_additional_points(member_id)
-            set_grade(member_id)
-
-            print(f"NAME : {names[member_id]}, POINT : {points[member_id]}, GRADE : ", end="")
-            print(f"{get_grade_str(member_id)}")
-
-        print("\nRemoved player")
-        print("==============")
-        for member_id in range(1, total_members + 1):
-            if grade[member_id] not in (1, 2) and wednesday_attendance[member_id] == 0 and weekend_attendance[member_id] == 0:
-                print(names[member_id])
+        init_member_data()
+        set_grade_per_members()
+        removing_members()
 
     except FileNotFoundError:
         print("파일을 찾을 수 없습니다.")
+
+
+def init_member_data():
+    with open("attendance_weekday_500.txt", encoding='utf-8') as f:
+        for _ in range(500):
+            line = f.readline()
+            if not line:
+                break
+            parts = line.strip().split()
+            if len(parts) == 2:
+                init_members(parts[0], parts[1])
+
+
+def set_grade_per_members():
+    for member_id in range(1, total_members + 1):
+        points[member_id] += get_additional_points(member_id)
+        set_grade(member_id)
+
+        print(f"NAME : {names[member_id]}, POINT : {points[member_id]}, GRADE : ", end="")
+        print(f"{get_grade_str(member_id)}")
+
+
+def removing_members():
+    print("\nRemoved player")
+    print("==============")
+    for member_id in range(1, total_members + 1):
+        if (grade[member_id] not in (1, 2)
+                and wednesday_attendance[member_id] == 0
+                and weekend_attendance[member_id] == 0):
+            print(names[member_id])
 
 
 def get_grade_str(member_id):
