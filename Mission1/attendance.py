@@ -17,7 +17,7 @@ wednesday_attendance = [0] * MAX_MEMBER_COUNT
 weekend_attendance = [0] * MAX_MEMBER_COUNT
 
 
-def init_members(member_name, day: str):
+def init_member_data(member_name, day: str):
     global total_members
 
     if member_name not in member_ids:
@@ -27,7 +27,7 @@ def init_members(member_name, day: str):
 
     member_id = member_ids[member_name]
 
-    add_point = get_points_per_day(day)
+    add_point = get_point_of_the_day(day)
     check_special_day_attendance(day, member_id)
 
     attendance_data[member_id][get_day_idx(day)] += 1
@@ -55,8 +55,8 @@ def check_special_day_attendance(day: str, member_id):
         weekend_attendance[member_id] += 1
 
 
-def get_points_per_day(day: str):
-    point_per_day = {
+def get_point_of_the_day(day: str):
+    day_point = {
         'monday': 1,
         'tuesday': 1,
         'wednesday': 3,
@@ -66,7 +66,7 @@ def get_points_per_day(day: str):
         'sunday': 2
     }
 
-    return point_per_day[day]
+    return day_point[day]
 
 
 def get_additional_points(i):
@@ -81,7 +81,7 @@ def get_additional_points(i):
 
 def input_file():
     try:
-        init_member_data()
+        init_data_with_read_file()
         set_grade_per_members()
         removing_members()
 
@@ -89,7 +89,7 @@ def input_file():
         print("파일을 찾을 수 없습니다.")
 
 
-def init_member_data():
+def init_data_with_read_file():
     with open("attendance_weekday_500.txt", encoding='utf-8') as f:
         for _ in range(500):
             line = f.readline()
@@ -98,7 +98,7 @@ def init_member_data():
             attend_data = line.strip().split()
             if len(attend_data) == 2:
                 name, day = attend_data[0], attend_data[1]
-                init_members(name, day)
+                init_member_data(name, day)
 
 
 def set_grade_per_members():
