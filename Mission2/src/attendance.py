@@ -1,4 +1,7 @@
 from Mission2.src.day import day_properties, Day, parsingDays
+from Mission2.src.grade.gold import GoldGrade
+from Mission2.src.grade.normal import NormalGrade
+from Mission2.src.grade.silver import SilverGrade
 from Mission2.src.member import Member
 
 member_ids = {}
@@ -13,6 +16,7 @@ GRADE_GOLD = 1
 GRADE_SILVER = 2
 
 grade = [0] * MAX_MEMBER_COUNT
+
 
 def init_member_data(member_name, day):
     global total_members
@@ -76,7 +80,7 @@ def set_grade_per_members():
         set_grade(point=member.points, m_id=member.id)
 
         print(f"NAME : {member.name}, POINT : {member.points}, GRADE : ", end="")
-        print(f"{get_grade_str(member.id)}")
+        print(f"{grade[member.id].get_str()}")
 
 
 def removing_members():
@@ -89,23 +93,13 @@ def removing_members():
                 and member.get_weekend_attendance() == 0):
             print(member.name)
 
-
-def get_grade_str(member_id):
-    if grade[member_id] == GRADE_GOLD:
-        return "GOLD"
-    elif grade[member_id] == GRADE_SILVER:
-        return "SILVER"
-    else:
-        return "NORMAL"
-
-
 def set_grade(point, m_id):
     if point >= GOLD_GRADE_POINT:
-        grade[m_id] = GRADE_GOLD
+        grade[m_id] = GoldGrade()
     elif point >= SILVER_GRADE_POINT:
-        grade[m_id] = GRADE_SILVER
+        grade[m_id] = SilverGrade()
     else:
-        grade[m_id] = GRADE_NORMAL
+        grade[m_id] = NormalGrade()
 
 
 if __name__ == "__main__":
