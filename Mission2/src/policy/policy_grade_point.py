@@ -15,7 +15,7 @@ class GradePointPolicy:
     @staticmethod
     def remove_condition(member):
         if (member.grade.get_grade_id() not in (GOLD_GRADE_ID, SILVER_GRADE_ID)
-                and member.attendance[day_properties[Day.WEDNESDAY]["day_id"]] == 0
+                and member.get_wednesday_attendance() == 0
                 and member.get_weekend_attendance() == 0):
             return True
 
@@ -29,3 +29,8 @@ class GradePointPolicy:
             return SilverGrade()
         else:
             return NormalGrade()
+
+    @staticmethod
+    def get_additional_points(wednesday_attendance_count, weekend_attendance_count):
+        return 10 if (wednesday_attendance_count > 9) or (weekend_attendance_count > 9) else 0
+

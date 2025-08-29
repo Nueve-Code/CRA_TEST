@@ -1,15 +1,9 @@
-from Mission2.src.day import Day, get_day_idx, get_point_of_the_day, parsing_days
+from Mission2.src.day import get_day_idx, get_point_of_the_day, parsing_days
 from Mission2.src.member import Member
 from Mission2.src.policy.policy_grade_point import GradePointPolicy
 
 member_list: dict = {}
 total_members = 0
-
-GOLD_GRADE_POINT = 50
-SILVER_GRADE_POINT = 30
-GRADE_NORMAL = 0
-GRADE_GOLD = 1
-GRADE_SILVER = 2
 
 
 def init_member_data(member_name, day):
@@ -25,16 +19,6 @@ def init_member_data(member_name, day):
     member = member_list[member_name]
     member.check_attendance(get_day_idx(day))
     member.add_points(get_point_of_the_day(day))
-
-
-def get_additional_points(member):
-    wednesday_attendance_count = member.attendance[get_day_idx(Day.WEDNESDAY)]
-    weekend_attendance_count = member.get_weekend_attendance() == 0
-
-    if (wednesday_attendance_count > 9) or (weekend_attendance_count > 9):
-        return 10
-    else:
-        return 0
 
 
 def input_file():
@@ -62,8 +46,10 @@ def init_data_with_read_file():
 def set_grade_per_members():
     for member in member_list:
         member = member_list[member]
-        member.add_points(get_additional_points(member))
-        set_grade(member=member)
+        member.add_points(GradePointPolicy.get_additional_points(
+            weekend_attendance_count=member.get_weekend_attendance(),
+            wednesday_attendance_count=member.get_wednesday_attendance()))
+        member.grade = GradePointPolicy.get_grade_per_standard(member.points)
 
         print(f"NAME : {member.name}, POINT : {member.points}, GRADE : ", end="")
         print(f"{member.grade.get_str()}")
@@ -76,10 +62,6 @@ def removing_members():
         member = member_list[member]
         if GradePointPolicy.remove_condition(member):
             print(member.name)
-
-
-def set_grade(member):
-    member.grade = GradePointPolicy.get_grade_per_standard(member.points)
 
 
 if __name__ == "__main__":
