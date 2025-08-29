@@ -1,3 +1,5 @@
+from Mission2.src.day import day_properties
+
 member_ids = {}
 total_members = 0
 
@@ -35,17 +37,7 @@ def init_member_data(member_name, day: str):
 
 
 def get_day_idx(day: str):
-    day_dict = {
-        'monday': 0,
-        'tuesday': 1,
-        'wednesday': 2,
-        'thursday': 3,
-        'friday': 4,
-        'saturday': 5,
-        'sunday': 6
-    }
-
-    return day_dict[day]
+    return day_properties[day]["day_id"]
 
 
 def check_special_day_attendance(day: str, member_id):
@@ -56,17 +48,7 @@ def check_special_day_attendance(day: str, member_id):
 
 
 def get_point_of_the_day(day: str):
-    day_point = {
-        'monday': 1,
-        'tuesday': 1,
-        'wednesday': 3,
-        'thursday': 1,
-        'friday': 1,
-        'saturday': 2,
-        'sunday': 2
-    }
-
-    return day_point[day]
+    return day_properties[day]["point"]
 
 
 def get_additional_points(i):
