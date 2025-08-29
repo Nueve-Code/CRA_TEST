@@ -9,3 +9,6 @@ class GoldGrade(GradeInterface):
 
     def get_str(self):
         return "GOLD"
+
+    def get_grade_id(self):
+        return 2

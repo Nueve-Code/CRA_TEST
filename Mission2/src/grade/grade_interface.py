@@ -12,3 +12,7 @@ class GradeInterface(ABC):
     @abstractmethod
     def get_str(self):
         pass
+
+    @abstractmethod
+    def get_grade_id(self):
+        pass

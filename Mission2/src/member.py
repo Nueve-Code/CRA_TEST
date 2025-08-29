@@ -1,4 +1,5 @@
 from Mission2.src.day import Day, day_properties
+from Mission2.src.grade.normal import NormalGrade
 
 
 class Member:
@@ -9,6 +10,7 @@ class Member:
         self._wednesday_attendance = 0
         self._points = 0
         self._attendance_of_the_week = [0] * 7
+        self._grade = NormalGrade()
 
     @property
     def id(self):
@@ -29,6 +31,14 @@ class Member:
     @property
     def points(self):
         return self._points
+
+    @property
+    def grade(self):
+        return self._grade
+
+    @grade.setter
+    def grade(self, grade):
+        self._grade = grade
 
     @property
     def attendance(self):

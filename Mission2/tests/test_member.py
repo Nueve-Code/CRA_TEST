@@ -45,13 +45,13 @@ def test_member_point(point):
 def test_init_members():
     from Mission2.src.attendance import init_member_data
     test_member = "test"
-    test_day = Day.MONDAY
+    test_day = 'monday'
 
     init_member_data(member_name=test_member, day=test_day)
 
     m = member_list[test_member]
-    assert_id = 1
-    assert member_ids[test_member] == m.id
-    assert m.name == names[assert_id]
-    assert points[assert_id] == m.points
-    assert attendance_data[assert_id][get_day_idx(test_day)] == m.attendance[get_day_idx(test_day)]
+    assert m.id == 1
+    assert m.name == test_member
+    assert m.points == 1
+    assert m.attendance[get_day_idx(Day.MONDAY)] == 1
+    assert m.grade.get_str() == "NORMAL"

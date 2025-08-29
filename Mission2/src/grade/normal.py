@@ -8,3 +8,6 @@ class NormalGrade(GradeInterface):
 
     def get_str(self):
         return "NORMAL"
+
+    def get_grade_id(self):
+        return 0

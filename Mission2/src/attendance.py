@@ -4,18 +4,14 @@ from Mission2.src.grade.normal import NormalGrade
 from Mission2.src.grade.silver import SilverGrade
 from Mission2.src.member import Member
 
-member_ids = {}
 member_list: dict = {}
 total_members = 0
 
-MAX_MEMBER_COUNT = 100
 GOLD_GRADE_POINT = 50
 SILVER_GRADE_POINT = 30
 GRADE_NORMAL = 0
 GRADE_GOLD = 1
 GRADE_SILVER = 2
-
-grade = [0] * MAX_MEMBER_COUNT
 
 
 def init_member_data(member_name, day):
@@ -77,10 +73,10 @@ def set_grade_per_members():
     for member in member_list:
         member = member_list[member]
         member.add_points(get_additional_points(member))
-        set_grade(point=member.points, m_id=member.id)
+        set_grade(point=member.points, member=member)
 
         print(f"NAME : {member.name}, POINT : {member.points}, GRADE : ", end="")
-        print(f"{grade[member.id].get_str()}")
+        print(f"{member.grade.get_str()}")
 
 
 def removing_members():
@@ -88,19 +84,20 @@ def removing_members():
     print("==============")
     for member in member_list:
         member = member_list[member]
-        if (grade[member.id] not in (GRADE_GOLD, GRADE_SILVER)
+        if (member.grade.get_grade_id() not in (GRADE_GOLD, GRADE_SILVER)
                 and member.attendance[get_day_idx(Day.WEDNESDAY)] == 0
                 and member.get_weekend_attendance() == 0):
             print(member.name)
 
-def set_grade(point, m_id):
+def set_grade(point, member):
     if point >= GOLD_GRADE_POINT:
-        grade[m_id] = GoldGrade()
+        grade = GoldGrade()
     elif point >= SILVER_GRADE_POINT:
-        grade[m_id] = SilverGrade()
+        grade = SilverGrade()
     else:
-        grade[m_id] = NormalGrade()
+        grade = NormalGrade()
 
+    member.grade = grade
 
 if __name__ == "__main__":
     input_file()
