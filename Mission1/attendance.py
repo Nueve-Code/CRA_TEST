@@ -2,6 +2,8 @@ member_ids = {}
 total_members = 0
 
 MAX_MEMBER_COUNT = 100
+GOLD_GRADE_POINT = 50
+SILVER_GRADE_POINT = 30
 
 # dat[사용자ID][요일]
 attendance_data = [[0] * MAX_MEMBER_COUNT for _ in range(MAX_MEMBER_COUNT)]
@@ -66,6 +68,15 @@ def get_points_per_day(day: str):
     return point_per_day[day]
 
 
+def get_additional_points(i):
+    wednesday_attendance_count = attendance_data[i][get_day_idx('wednesday')]
+    weekend_attendance_count = attendance_data[i][get_day_idx('saturday')] + attendance_data[i][get_day_idx('sunday')]
+
+    if (wednesday_attendance_count > 9) or (weekend_attendance_count > 9) :
+        return 10
+    else:
+        return 0
+
 def input_file():
     try:
         with open("attendance_weekday_500.txt", encoding='utf-8') as f:
@@ -77,42 +88,39 @@ def input_file():
                 if len(parts) == 2:
                     init_members(parts[0], parts[1])
 
-        for i in range(1, total_members + 1):
-            points[i] += get_additional_points(i)
+        for member_id in range(1, total_members + 1):
+            points[member_id] += get_additional_points(member_id)
+            set_grade(member_id)
 
-            if points[i] >= 50:
-                grade[i] = 1
-            elif points[i] >= 30:
-                grade[i] = 2
-            else:
-                grade[i] = 0
-
-            print(f"NAME : {names[i]}, POINT : {points[i]}, GRADE : ", end="")
-            if grade[i] == 1:
-                print("GOLD")
-            elif grade[i] == 2:
-                print("SILVER")
-            else:
-                print("NORMAL")
+            print(f"NAME : {names[member_id]}, POINT : {points[member_id]}, GRADE : ", end="")
+            print(f"{get_grade_str(member_id)}")
 
         print("\nRemoved player")
         print("==============")
-        for i in range(1, total_members + 1):
-            if grade[i] not in (1, 2) and wednesday_attendance[i] == 0 and weekend_attendance[i] == 0:
-                print(names[i])
+        for member_id in range(1, total_members + 1):
+            if grade[member_id] not in (1, 2) and wednesday_attendance[member_id] == 0 and weekend_attendance[member_id] == 0:
+                print(names[member_id])
 
     except FileNotFoundError:
         print("파일을 찾을 수 없습니다.")
 
 
-def get_additional_points(i):
-    wednesday_attendance_count = attendance_data[i][get_day_idx('wednesday')]
-    weekend_attendance_count = attendance_data[i][get_day_idx('saturday')] + attendance_data[i][get_day_idx('sunday')]
-
-    if (wednesday_attendance_count > 9) or (weekend_attendance_count > 9) :
-        return 10
+def get_grade_str(member_id):
+    if grade[member_id] == 1:
+        return "GOLD"
+    elif grade[member_id] == 2:
+        return "SILVER"
     else:
-        return 0
+        return "NORMAL"
+
+
+def set_grade(i):
+    if points[i] >= GOLD_GRADE_POINT:
+        grade[i] = 1
+    elif points[i] >= SILVER_GRADE_POINT:
+        grade[i] = 2
+    else:
+        grade[i] = 0
 
 
 if __name__ == "__main__":
