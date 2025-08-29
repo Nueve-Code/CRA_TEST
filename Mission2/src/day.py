@@ -2,13 +2,32 @@ from enum import Enum
 
 
 class Day(Enum):
-    MONDAY = "monday",
+    MONDAY = 'monday',
     TUESDAY = "tuesday",
     WEDNESDAY = "wednesday",
     THURSDAY = "thursday",
     FRIDAY = "friday",
     SATURDAY = "saturday",
     SUNDAY = "sunday",
+
+
+def parsingDays(day):
+    if day == 'monday':
+        return Day.MONDAY
+    elif day == 'tuesday':
+        return Day.TUESDAY
+    elif day == 'wednesday':
+        return Day.WEDNESDAY
+    elif day == 'thursday':
+        return Day.THURSDAY
+    elif day == 'friday':
+        return Day.FRIDAY
+    elif day == 'saturday':
+        return Day.SATURDAY
+    elif day == 'sunday':
+        return Day.SUNDAY
+    else:
+        return None
 
 
 day_properties = {

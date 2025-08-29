@@ -1,7 +1,6 @@
 import pytest
 
-from Mission2.src.attendance import member_ids, names, get_point_of_the_day, points, wednesday_attendance, \
-    attendance_data, get_day_idx, weekend_attendance, member_list
+from Mission2.src.attendance import *
 from Mission2.src.member import Member
 from Mission2.src.day import Day
 
@@ -52,10 +51,7 @@ def test_init_members():
 
     m = member_list[test_member]
     assert_id = 1
-    assert member_ids[test_member] == assert_id
-    assert member_ids[test_member] == m.member_id
-    assert m.member_name == names[assert_id]
+    assert member_ids[test_member] == m.id
+    assert m.name == names[assert_id]
     assert points[assert_id] == m.points
-    assert wednesday_attendance[assert_id] == m.attendance[get_day_idx(Day.WEDNESDAY)]
-    assert weekend_attendance[assert_id] == m.attendance[get_day_idx(Day.SATURDAY)] + m.attendance[get_day_idx(Day.SUNDAY)]
     assert attendance_data[assert_id][get_day_idx(test_day)] == m.attendance[get_day_idx(test_day)]

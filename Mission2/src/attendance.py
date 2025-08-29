@@ -1,4 +1,4 @@
-from Mission2.src.day import day_properties
+from Mission2.src.day import day_properties, Day, parsingDays
 from Mission2.src.member import Member
 
 member_ids = {}
@@ -12,57 +12,34 @@ GRADE_NORMAL = 0
 GRADE_GOLD = 1
 GRADE_SILVER = 2
 
-# dat[사용자ID][요일]
-attendance_data = [[0] * MAX_MEMBER_COUNT for _ in range(MAX_MEMBER_COUNT)]
-points = [0] * MAX_MEMBER_COUNT
 grade = [0] * MAX_MEMBER_COUNT
-names = [''] * MAX_MEMBER_COUNT
-wednesday_attendance = [0] * MAX_MEMBER_COUNT
-weekend_attendance = [0] * MAX_MEMBER_COUNT
-
 
 def init_member_data(member_name, day):
     global total_members
+
+    day = parsingDays(day)
 
     if member_name not in member_list:
         total_members += 1
         m = Member(member_name, total_members)
         member_list[member_name] = m
 
-        member_ids[member_name] = total_members
-        names[total_members] = member_name
-
-    member_id = member_ids[member_name]
-
-    point = get_point_of_the_day(day)
-    check_special_day_attendance(day, member_id)
-
-    attendance_data[member_id][get_day_idx(day)] += 1
-    points[member_id] += point
-
     member = member_list[member_name]
     member.check_attendance(get_day_idx(day))
-    member.add_points(point)
+    member.add_points(get_point_of_the_day(day))
 
 
 def get_day_idx(day):
     return day_properties[day]["day_id"]
 
 
-def check_special_day_attendance(day: str, member_id):
-    if day == "wednesday":
-        wednesday_attendance[member_id] += 1
-    elif day == "saturday" or day == "sunday":
-        weekend_attendance[member_id] += 1
-
-
 def get_point_of_the_day(day):
     return day_properties[day]["point"]
 
 
-def get_additional_points(i):
-    wednesday_attendance_count = attendance_data[i][get_day_idx('wednesday')]
-    weekend_attendance_count = attendance_data[i][get_day_idx('saturday')] + attendance_data[i][get_day_idx('sunday')]
+def get_additional_points(member):
+    wednesday_attendance_count = member.attendance[get_day_idx(Day.WEDNESDAY)]
+    weekend_attendance_count = member.get_weekend_attendance() == 0
 
     if (wednesday_attendance_count > 9) or (weekend_attendance_count > 9):
         return 10
@@ -93,22 +70,24 @@ def init_data_with_read_file():
 
 
 def set_grade_per_members():
-    for member_id in range(1, total_members + 1):
-        points[member_id] += get_additional_points(member_id)
-        set_grade(point=points[member_id], m_id=member_id)
+    for member in member_list:
+        member = member_list[member]
+        member.add_points(get_additional_points(member))
+        set_grade(point=member.points, m_id=member.id)
 
-        print(f"NAME : {names[member_id]}, POINT : {points[member_id]}, GRADE : ", end="")
-        print(f"{get_grade_str(member_id)}")
+        print(f"NAME : {member.name}, POINT : {member.points}, GRADE : ", end="")
+        print(f"{get_grade_str(member.id)}")
 
 
 def removing_members():
     print("\nRemoved player")
     print("==============")
-    for member_id in range(1, total_members + 1):
-        if (grade[member_id] not in (GRADE_GOLD, GRADE_SILVER)
-                and wednesday_attendance[member_id] == 0
-                and weekend_attendance[member_id] == 0):
-            print(names[member_id])
+    for member in member_list:
+        member = member_list[member]
+        if (grade[member.id] not in (GRADE_GOLD, GRADE_SILVER)
+                and member.attendance[get_day_idx(Day.WEDNESDAY)] == 0
+                and member.get_weekend_attendance() == 0):
+            print(member.name)
 
 
 def get_grade_str(member_id):

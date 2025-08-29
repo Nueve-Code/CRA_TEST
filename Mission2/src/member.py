@@ -1,4 +1,4 @@
-from Mission2.src.day import Day
+from Mission2.src.day import Day, day_properties
 
 
 class Member:
@@ -11,11 +11,11 @@ class Member:
         self._attendance_of_the_week = [0] * 7
 
     @property
-    def member_id(self):
+    def id(self):
         return self._member_id
 
     @property
-    def member_name(self):
+    def name(self):
         return self._member_name
 
     @property
@@ -33,6 +33,10 @@ class Member:
     @property
     def attendance(self):
         return self._attendance_of_the_week
+
+    def get_weekend_attendance(self):
+        return (self._attendance_of_the_week[day_properties[Day.SATURDAY]["day_id"]] +
+        self._attendance_of_the_week[day_properties[Day.SUNDAY]["day_id"]])
 
     def check_attendance(self, day: int):
         self._attendance_of_the_week[day] += 1
