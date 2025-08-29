@@ -4,6 +4,9 @@ total_members = 0
 MAX_MEMBER_COUNT = 100
 GOLD_GRADE_POINT = 50
 SILVER_GRADE_POINT = 30
+GRADE_NORMAL = 0
+GRADE_GOLD = 1
+GRADE_SILVER = 2
 
 # dat[사용자ID][요일]
 attendance_data = [[0] * MAX_MEMBER_COUNT for _ in range(MAX_MEMBER_COUNT)]
@@ -92,9 +95,10 @@ def init_member_data():
             line = f.readline()
             if not line:
                 break
-            parts = line.strip().split()
-            if len(parts) == 2:
-                init_members(parts[0], parts[1])
+            attend_data = line.strip().split()
+            if len(attend_data) == 2:
+                name, day = attend_data[0], attend_data[1]
+                init_members(name, day)
 
 
 def set_grade_per_members():
@@ -110,16 +114,16 @@ def removing_members():
     print("\nRemoved player")
     print("==============")
     for member_id in range(1, total_members + 1):
-        if (grade[member_id] not in (1, 2)
+        if (grade[member_id] not in (GRADE_GOLD, GRADE_SILVER)
                 and wednesday_attendance[member_id] == 0
                 and weekend_attendance[member_id] == 0):
             print(names[member_id])
 
 
 def get_grade_str(member_id):
-    if grade[member_id] == 1:
+    if grade[member_id] == GRADE_GOLD:
         return "GOLD"
-    elif grade[member_id] == 2:
+    elif grade[member_id] == GRADE_SILVER:
         return "SILVER"
     else:
         return "NORMAL"
@@ -127,11 +131,11 @@ def get_grade_str(member_id):
 
 def set_grade(i):
     if points[i] >= GOLD_GRADE_POINT:
-        grade[i] = 1
+        grade[i] = GRADE_GOLD
     elif points[i] >= SILVER_GRADE_POINT:
-        grade[i] = 2
+        grade[i] = GRADE_SILVER
     else:
-        grade[i] = 0
+        grade[i] = GRADE_NORMAL
 
 
 if __name__ == "__main__":
