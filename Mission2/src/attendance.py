@@ -104,7 +104,7 @@ def init_data_with_read_file():
 def set_grade_per_members():
     for member_id in range(1, total_members + 1):
         points[member_id] += get_additional_points(member_id)
-        set_grade(member_id)
+        set_grade(point=points[member_id],m_id=member_id)
 
         print(f"NAME : {names[member_id]}, POINT : {points[member_id]}, GRADE : ", end="")
         print(f"{get_grade_str(member_id)}")
@@ -129,13 +129,13 @@ def get_grade_str(member_id):
         return "NORMAL"
 
 
-def set_grade(i):
-    if points[i] >= GOLD_GRADE_POINT:
-        grade[i] = GRADE_GOLD
-    elif points[i] >= SILVER_GRADE_POINT:
-        grade[i] = GRADE_SILVER
+def set_grade(point, m_id):
+    if point >= GOLD_GRADE_POINT:
+        grade[m_id] = GRADE_GOLD
+    elif point >= SILVER_GRADE_POINT:
+        grade[m_id] = GRADE_SILVER
     else:
-        grade[i] = GRADE_NORMAL
+        grade[m_id] = GRADE_NORMAL
 
 
 if __name__ == "__main__":
