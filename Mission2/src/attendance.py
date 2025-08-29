@@ -22,25 +22,24 @@ def init_member_data(member_name, day):
 
 
 def input_file():
-    try:
-        init_data_with_read_file()
-        set_grade_per_members()
-        removing_members()
+    init_data_with_read_file("attendance_weekday_500.txt")
+    set_grade_per_members()
+    removing_members()
 
+
+def init_data_with_read_file(filename):
+    try:
+        with open(filename, encoding='utf-8') as f:
+            for _ in range(500):
+                line = f.readline()
+                if not line:
+                    break
+                attend_data = line.strip().split()
+                if len(attend_data) == 2:
+                    name, day = attend_data[0], attend_data[1]
+                    init_member_data(name, day)
     except FileNotFoundError:
         print("파일을 찾을 수 없습니다.")
-
-
-def init_data_with_read_file():
-    with open("attendance_weekday_500.txt", encoding='utf-8') as f:
-        for _ in range(500):
-            line = f.readline()
-            if not line:
-                break
-            attend_data = line.strip().split()
-            if len(attend_data) == 2:
-                name, day = attend_data[0], attend_data[1]
-                init_member_data(name, day)
 
 
 def set_grade_per_members():
