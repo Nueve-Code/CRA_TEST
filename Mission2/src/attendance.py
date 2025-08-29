@@ -1,6 +1,8 @@
 from Mission2.src.day import day_properties
+from Mission2.src.member import Member
 
 member_ids = {}
+member_list: dict = {}
 total_members = 0
 
 MAX_MEMBER_COUNT = 100
@@ -19,24 +21,31 @@ wednesday_attendance = [0] * MAX_MEMBER_COUNT
 weekend_attendance = [0] * MAX_MEMBER_COUNT
 
 
-def init_member_data(member_name, day: str):
+def init_member_data(member_name, day):
     global total_members
 
-    if member_name not in member_ids:
+    if member_name not in member_list:
         total_members += 1
+        m = Member(member_name, total_members)
+        member_list[member_name] = m
+
         member_ids[member_name] = total_members
         names[total_members] = member_name
 
     member_id = member_ids[member_name]
 
-    add_point = get_point_of_the_day(day)
+    point = get_point_of_the_day(day)
     check_special_day_attendance(day, member_id)
 
     attendance_data[member_id][get_day_idx(day)] += 1
-    points[member_id] += add_point
+    points[member_id] += point
+
+    member = member_list[member_name]
+    member.check_attendance(get_day_idx(day))
+    member.add_points(point)
 
 
-def get_day_idx(day: str):
+def get_day_idx(day):
     return day_properties[day]["day_id"]
 
 
@@ -47,7 +56,7 @@ def check_special_day_attendance(day: str, member_id):
         weekend_attendance[member_id] += 1
 
 
-def get_point_of_the_day(day: str):
+def get_point_of_the_day(day):
     return day_properties[day]["point"]
 
 
@@ -86,7 +95,7 @@ def init_data_with_read_file():
 def set_grade_per_members():
     for member_id in range(1, total_members + 1):
         points[member_id] += get_additional_points(member_id)
-        set_grade(point=points[member_id],m_id=member_id)
+        set_grade(point=points[member_id], m_id=member_id)
 
         print(f"NAME : {names[member_id]}, POINT : {points[member_id]}, GRADE : ", end="")
         print(f"{get_grade_str(member_id)}")
